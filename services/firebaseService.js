@@ -3,7 +3,7 @@ const serviceAccount = require('../serviceAccountKey.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  storageBucket: 'polang-app.appspot.com',
+  storageBucket: 'polang-app.firebasestorage.app',
 });
 
 const db = admin.firestore();
