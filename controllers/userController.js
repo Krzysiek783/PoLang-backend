@@ -24,12 +24,12 @@ const { bucket, db } = require('../services/firebaseService');
       console.log("🧪 Otrzymano plik:", req.file);
 
   
-      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileRef.name}`;
+      const publicUri = `https://storage.googleapis.com/${bucket.name}/${fileRef.name}`;
   
       // (opcjonalnie) Zapis do Firestore:
-      await db.collection('users').doc(uid).update({ avatarUrl: publicUrl });
+      await db.collection('users').doc(uid).update({ avatarUri: publicUri });
   
-      res.json({ url: publicUrl });
+      res.json({ url: publicUri });
     } catch (err) {
       console.error('❌ Upload error:', err);
       res.status(500).json({ error: 'Upload failed' });

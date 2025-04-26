@@ -6,6 +6,7 @@ const db = getFirestore();
 
 // 🧠 Pamięć podręczna
 let cachedLeaderboard = [];
+let cachedLeaderboardMap = {};  // Nowa zmienna!
 let lastUpdate = null;
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minut
 
@@ -32,7 +33,13 @@ async function updateLeaderboardCache() {
     };
   });
 
+  const leaderboardMap = {};//Mapujemy wszystkich user aby pobierać zmienne
+  leaderboard.forEach(user => {
+  leaderboardMap[user.uid] = user;
+  });
+
   cachedLeaderboard = leaderboard;
+  cachedLeaderboardMap = leaderboardMap;
   lastUpdate = Date.now();
   console.log(`[Leaderboard] Cache updated with ${leaderboard.length} users`);
 }
@@ -57,7 +64,9 @@ router.get('/', async (req, res) => {
     }
 
     const top = cachedLeaderboard.slice(offset, offset + limit);
-    const currentUser = cachedLeaderboard.find(u => u.uid === userId) || null;
+    //const currentUser = cachedLeaderboard.find(u => u.uid === userId) || null;     //Nie efektywne, bo przeszukujemy wszystkich userow narazie sobie to odpuszczamy
+    const currentUser = cachedLeaderboardMap[userId] || null;
+
 
     res.json({
       top,
