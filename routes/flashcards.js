@@ -8,9 +8,13 @@ router.get('/flashcards', async (req, res) => {
 
   try {
     const ref = db.collection('Material').doc('Vocabulary').collection(level);
-    const snapshot = await ref.limit(100).get();
+    const snapshot = await ref.get(); // ← bez limitu, pobiera wszystkie słówka
 
     const allWords = snapshot.docs.map(doc => doc.data());
+
+    if (allWords.length === 0) {
+      return res.status(404).json({ message: "Brak słówek dla tego poziomu" });
+    }
 
     const selectedWords = allWords
       .sort(() => 0.5 - Math.random())
